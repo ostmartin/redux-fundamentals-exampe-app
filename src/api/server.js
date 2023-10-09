@@ -2,8 +2,8 @@
 
 import { Server, Model, Factory, hasMany, RestSerializer } from 'miragejs'
 
-import faker from 'faker'
-import seedrandom from 'seedrandom'
+import faker from 'faker';
+import seedrandom from 'seedrandom';
 
 const IdSerializer = RestSerializer.extend({
   serializeIds: 'always',

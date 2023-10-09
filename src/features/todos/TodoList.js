@@ -40,7 +40,6 @@ import { selectFilteredTodoIds } from './todosSlice';
 /*-------------------------*/
 
 const TodoList = () => {
-  console.log('render');
 
   /*----------------------*/
   

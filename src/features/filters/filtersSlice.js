@@ -1,3 +1,5 @@
+import { createSlice } from "@reduxjs/toolkit"
+
 export const StatusFilters = {
   All: 'all',
   Active: 'active',
@@ -8,43 +10,50 @@ const initialState = {
   status: StatusFilters.All,
   colors: [],
 }
-  
-export default function filtersReducer(state = initialState, action) {
-  switch (action.type) {
-    case 'filters/statusFilterChanged': {
-      return {
-        ...state,
-        status: action.payload,
-      }
-    }
-    case 'filters/colorFilterChanged': {
-      let { color, changeType } = action.payload
-      const { colors } = state
 
-      switch (changeType) {
-        case 'added': {
-          if (colors.includes(color)) {
-            return state
+const filtersSlice = createSlice({
+  name: 'filters',
+  initialState,
+  reducers: {
+    statusFilterChanged(state, action) {
+      state.status = action.payload;
+    },
+    colorFilterChanged: {
+      reducer(state, action) {
+        let { color, changeType } = action.payload;
+        const { colors } = state;
+
+        switch (changeType) {
+          case 'added': {
+            if (!colors.includes(color)) {
+              colors.push(color);
+            }
+            break;
           }
-
-          return {
-            ...state,
-            colors: state.colors.concat(color),
+          case 'removed': {
+            state.colors = colors.filter(existingColor => existingColor !== color);
+            break;
+          }
+          default:
+            return
+        }
+      },
+      prepare(color, changeType) {
+        return {
+          payload: {
+            color,
+            changeType
           }
         }
-        case 'removed': {
-          return {
-            ...state,
-            colors: state.colors.filter(
-              (existingColor) => existingColor !== color
-            ),
-          }
-        }
-        default:
-          return state
       }
-    }
-    default:
-      return state
+    },
+
   }
-}  
+})
+
+export const {
+  colorFilterChanged,
+  statusFilterChanged
+} = filtersSlice.actions;
+
+export default filtersSlice.reducer;
